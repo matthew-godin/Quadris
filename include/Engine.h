@@ -9,7 +9,7 @@
 #include "Observer.h"
 #include "Subject.h"
 
-class Engine: public Observer, public Subject {
+struct EngineImpl {
     int level;
     int score;
     int highScore;
@@ -18,6 +18,10 @@ class Engine: public Observer, public Subject {
     bool isGettingRandomBlocks;
     std::queue<Block> queuedBlocks;
     Block *currentBlock;
+};
+
+class Engine: public Observer, public Subject {
+    std::unique_ptr<EngineImpl> *impl;
 
 public:
     Engine();
@@ -30,4 +34,5 @@ public:
     virtual void notify(Subject*) override;
     void interpretCommand(std::string);
 };
+
 #endif
