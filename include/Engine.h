@@ -17,7 +17,7 @@ class Engine: public Observer, public Subject {
     std::vector<Block> blocks;
     bool isGettingRandomBlocks;
     std::queue<Block> queuedBlocks;
-    Block currentBlock;
+    Block *currentBlock;
 
 public:
     Engine();
