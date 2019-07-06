@@ -2,3 +2,7 @@
 
 Engine::Engine() {}
 Engine::~Engine() {}
+
+void Engine::notify(Subject *sub) {
+
+}
