@@ -3,7 +3,8 @@ CXXFLAGS = -std=c++14 -Wall
 
 SRCDIR = src
 BUILDDIR = build
-TARGET = bin/quadris
+TARGETDIR = bin
+TARGET = ${TARGETDIR}/quadris
  
 SRCEXT = cc
 SOURCES = $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
@@ -13,6 +14,7 @@ INC = -I include
 
 $(TARGET): $(OBJECTS)
 	@echo "Linking..."
+	@mkdir -p ${TARGETDIR}
 	$(CXX) $^ -o $(TARGET)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
