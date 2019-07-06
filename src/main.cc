@@ -12,10 +12,11 @@ int main(int argc, char **argv) {
 
     if (argc > 1) {
         for (int i = 1; i < argc; ++i) {
-            if (strcmp(argv[i], "-text") == 0) {
-                cout << "Text mode on" << endl;
+			string argument = string(argv[i]);
+            if (argument == "-text") {
                 isText = true;
-            } else if (strcmp(argv[i], "-seed") == 0) {
+                cout << "Text mode is on" << endl;
+            } else if (argument == "-seed") {
                 try {
                     string seedString = string(argv[i + 1]);
                     seed = stof(seedString);
@@ -24,7 +25,7 @@ int main(int argc, char **argv) {
                 } catch (...) {
                     cerr << "Failed to parse argument -seed" << endl;
                 }
-            } else if (strcmp(argv[i], "-scriptfile") == 0) {
+            } else if (argument == "-scriptfile") {
                 try {
                     string fileName = string(argv[i + 1]);
                     i++;
@@ -32,7 +33,7 @@ int main(int argc, char **argv) {
                 } catch (...) {
                     cerr << "Failed to parse argument -scriptfile" << endl;
                 }
-            } else if (strcmp(argv[i], "-startlevel") == 0) {
+            } else if (argument == "-startlevel") {
                 try {
                     string levelNumber = string(argv[i + 1]);
                     startLevel = stoi(levelNumber);

@@ -5,6 +5,7 @@
 #include <vector>
 #include <queue>
 #include <string>
+#include <memory>
 #include "Block.h"
 #include "Observer.h"
 #include "Subject.h"
