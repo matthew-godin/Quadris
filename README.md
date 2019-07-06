@@ -26,6 +26,7 @@ cs247-quadris
 ```
 ## Development
 
+Before running the following commands, make sure you have a `bin/` folder in the root directory
 1. Run command `make`
 2. Run the project executable in `/bin/quadris`
 3. Run command `make clean`
