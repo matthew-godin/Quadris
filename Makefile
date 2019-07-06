@@ -1,5 +1,5 @@
 CXX = g++ # This is the main compiler
-CXXFLAGS = -std=c++14 -Wall -MMD
+CXXFLAGS = -std=c++14 -Wall
 
 SRCDIR = src
 BUILDDIR = build
@@ -12,18 +12,16 @@ OBJECTS = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 INC = -I include
 
 $(TARGET): $(OBJECTS)
+	@echo "Linking..."
 	$(CXX) $^ -o $(TARGET)
-	@echo " Linking..."
-	@echo " $(CXX) $^ -o $(TARGET) $(LIB)";
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
-	$(CXX) $(CXXFLAGS) $(INC) -c -o $@ $<
 	@mkdir -p $(BUILDDIR)
-	@echo " $(CXX) $(CXXFLAGS) $(INC) -c -o $@ $<" 
+	$(CXX) $(CXXFLAGS) $(INC) -c -o $@ $<
 
 clean:
-	@echo " Cleaning..."; 
-	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+	@echo " Cleaning...";
+	$(RM) -r $(BUILDDIR) $(TARGET)
 
 # Tests
 #tester:
