@@ -22,9 +22,5 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 clean:
 	@echo " Cleaning...";
 	$(RM) -r $(BUILDDIR) $(TARGET)
-
-# Tests
-#tester:
-#	$(CXX) $(CXXFLAGS) test/tester.cpp $(INC) $(LIB) -o bin/tester
-
+	
 .PHONY: clean
