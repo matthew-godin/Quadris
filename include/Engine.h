@@ -9,21 +9,32 @@
 #include "Block.h"
 #include "Observer.h"
 #include "Subject.h"
+#include "Board.h"
+
+using std::shared_ptr;
+using std::unique_ptr;
+using std::queue;
+using std:: string;
 
 struct EngineImpl {
     int level;
     int score;
     int highScore;
-    std::vector<std::vector<int>> board;
-    std::vector<Block> blocks;
     bool isGettingRandomBlocks;
-    std::queue<Block> queuedBlocks;
-    Block *currentBlock;
+    // Main Board
+    shared_ptr<Board> board;
+    shared_ptr<Block> currentBlock;
+    queue<Block> queuedBlocks;
 };
 
 class Engine: public Observer, public Subject {
-    std::unique_ptr<EngineImpl> *impl;
+    unique_ptr<EngineImpl> impl;
 
+    void levelUp();
+    void levelDown();
+    void processInputFile();
+    void restart();
+    
 public:
     Engine();
     ~Engine();
@@ -33,7 +44,7 @@ public:
     Engine& operator=(const Engine&&);
 
     virtual void notify(Subject*) override;
-    void interpretCommand(std::string);
+    void interpretCommand(string);
 };
 
 #endif

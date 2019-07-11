@@ -4,10 +4,11 @@
 #include <vector>
 #include "Observer.h"
 
+using std::vector;
 class Observer;
 
 class Subject {
-    std::vector<Observer> observers;
+    vector<Observer*> observers;
 
 public:
     Subject();

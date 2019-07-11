@@ -2,7 +2,7 @@
 #define VIEW_H_
 
 class View {
-    
+
 };
 
 #endif

@@ -12,7 +12,7 @@ abstract class Subject {
 
 // Model
 
-enum BoardType: char {
+enum BlockType: char {
     case "J"
     case "O"
     ...
@@ -20,7 +20,7 @@ enum BoardType: char {
 }
 
 class Board {
-    List<List<BoardType>> board;
+    List<List<BlockType>> board;
     List<Block> blocks;
     
     private void attemptMoveLeft() {}
