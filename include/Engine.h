@@ -6,28 +6,33 @@
 #include <queue>
 #include <string>
 #include <memory>
+#include <map>
 #include "Block.h"
 #include "Observer.h"
 #include "Subject.h"
 #include "Board.h"
+#include "CommandTrie.h"
 
 using std::shared_ptr;
 using std::unique_ptr;
 using std::queue;
-using std:: string;
-
-struct EngineImpl {
-    int level;
-    int score;
-    int highScore;
-    bool isGettingRandomBlocks;
-    // Main Board
-    shared_ptr<Board> board;
-    shared_ptr<Block> currentBlock;
-    queue<Block> queuedBlocks;
-};
+using std::string;
+using std::unordered_map;
 
 class Engine: public Observer, public Subject {
+
+    struct EngineImpl {
+        int level;
+        int score;
+        int highScore;
+        bool isGettingRandomBlocks;
+        CommandTrie commandTrie;
+        // Main Board
+        shared_ptr<Board> board;
+        shared_ptr<Block> currentBlock;
+        queue<Block> queuedBlocks;
+    };
+
     unique_ptr<EngineImpl> impl;
 
     void levelUp();
@@ -35,16 +40,18 @@ class Engine: public Observer, public Subject {
     void processInputFile();
     void restart();
     
-public:
-    Engine();
-    ~Engine();
-    Engine(const Engine&);
-    Engine(const Engine&&);
-    Engine& operator=(const Engine&);
-    Engine& operator=(const Engine&&);
+    public:
+        Engine();
+        ~Engine();
+        Engine(const Engine&);
+        Engine(const Engine&&);
+        Engine& operator=(const Engine&);
+        Engine& operator=(const Engine&&);
 
-    virtual void notify(Subject*) override;
-    void interpretCommand(string);
+        void notify(Subject*) override;
+
+        void run();
+        void performCommand(string);
 };
 
 #endif

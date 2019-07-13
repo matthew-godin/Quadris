@@ -21,6 +21,8 @@ public:
     Game();
     ~Game();
 
+    void start();
+
     friend ostream& operator<<(ostream&, const Board* const b);
 };
 

@@ -1,5 +1,5 @@
 #include "../include/Observer.h"
-#include "../include/Engine.h"
+#include "../include/Game.h"
 #include <string>
 
 using namespace std;
@@ -45,6 +45,9 @@ int main(int argc, char **argv) {
             }
         }
     }
+
+    Game game;
+    game.start();
 
     return 0;
 }
