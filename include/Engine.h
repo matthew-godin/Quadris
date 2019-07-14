@@ -12,6 +12,7 @@
 #include "Subject.h"
 #include "Board.h"
 #include "CommandTrie.h"
+#include "View.h"
 
 using std::shared_ptr;
 using std::unique_ptr;
@@ -28,12 +29,14 @@ class Engine: public Observer, public Subject {
         int highScore;
         bool isGettingRandomBlocks;
         unique_ptr<CommandTrie> commandTrie;
+        // Main View
+        shared_ptr<View> view;
         // Main Board
         shared_ptr<Board> board;
         shared_ptr<Block> currentBlock;
         queue<shared_ptr<Block>> queuedBlocks;
 
-        EngineImpl(shared_ptr<Board> b, int level = 0);
+        EngineImpl(shared_ptr<Board> b, shared_ptr<View> v, int level = 0);
         ~EngineImpl();
     };
 
@@ -45,7 +48,7 @@ class Engine: public Observer, public Subject {
     void restart();
     
     public:
-        Engine(shared_ptr<Board>);
+        Engine(shared_ptr<Board>, shared_ptr<View>);
         ~Engine();
         Engine(const Engine&);
         Engine(const Engine&&);

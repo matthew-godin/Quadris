@@ -4,8 +4,9 @@ using std::make_shared;
 using std::istream;
 
 Game::Game(): 
+view{make_shared<View>()},
 board{make_shared<Board>()}, 
-engine{make_shared<Engine>(board)} {
+engine{make_shared<Engine>(board, view)} {
 
 }
 

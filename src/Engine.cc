@@ -3,12 +3,13 @@
 using namespace std;
 
 // Constructors
-Engine::EngineImpl::EngineImpl(shared_ptr<Board> b, int level): 
+Engine::EngineImpl::EngineImpl(shared_ptr<Board> b, shared_ptr<View> v, int level): 
 level{level},
 score{0},
 highScore{0},
 isGettingRandomBlocks{false},
 commandTrie{nullptr},
+view{v},
 board{b},
 currentBlock{nullptr} {}
 
@@ -16,8 +17,8 @@ Engine::EngineImpl::~EngineImpl() {
     commandTrie.release();
 }
 
-Engine::Engine(shared_ptr<Board> b): 
-impl{make_unique<EngineImpl>(b, 0)} {}
+Engine::Engine(shared_ptr<Board> b, shared_ptr<View> v): 
+impl{make_unique<EngineImpl>(b, v, 0)} {}
 Engine::~Engine() {}
 
 // Private method
