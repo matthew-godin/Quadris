@@ -18,19 +18,21 @@ enum BlockType {
 };
 
 class Block: public Subject {
-protected:
+    BlockType blockType;
+    // Order of tile positions doesn't matter
     vector<pair<int, int>> tilePositions;
 
-    virtual char getBlockUnit() = 0;
+    static vector<pair<int,int>> getInitialTilePositionForType(BlockType);
+    char getBlockUnit();
 public:
-    Block();
+    Block(BlockType);
     ~Block();
     
     void moveDown();
     void moveLeft();
     void moveRight();
-    virtual void rotateCW() = 0;
-    virtual void rotateCCW() = 0;
+    void rotateCW();
+    void rotateCCW();
 };
 
 #endif

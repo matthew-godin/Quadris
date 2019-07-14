@@ -21,9 +21,9 @@ public:
     Game();
     ~Game();
 
-    void start();
+    void start(std::istream&);
 
-    friend ostream& operator<<(ostream&, const Board* const b);
+    friend ostream& operator<<(ostream&, const Game& game);
 };
 
 #endif

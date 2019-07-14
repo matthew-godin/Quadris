@@ -1,20 +1,17 @@
 #include "CommandTrie.h"
 
-using namespace std;
-
-void CommandTrie::TrieNode::TrieNode(char letter = NULL) : 
+CommandTrie::TrieNode::TrieNode(char letter) : 
     letter{letter},
     terminalLetter{false} {}
 
-void CommandTrie::CommandTrie() {
+CommandTrie::CommandTrie(): root{'\0'} {
     
 }
 
 void CommandTrie::insert(string command) {
     TrieNode curr = root;
     for (char letter : command) {
-        iterator<TrieNode> next = curr.find(letter);
-        if ()
+        // iterator<TrieNode> next = curr.find(letter);
     }
 }
 
