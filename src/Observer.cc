@@ -1,5 +1,3 @@
-#include "Observer.h"
-//Let's write this
-Observer::Observer() {}
+#include "../include/Observer.h"
 
 Observer::~Observer() {}
