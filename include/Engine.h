@@ -66,6 +66,7 @@ class Engine: public Observer, public Subject {
         int getBoardLength();
         int getBoardHeight();
         BlockType getNextBlock();
+        bool getGameOver();
 };
 
 #endif

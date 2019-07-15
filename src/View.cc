@@ -156,6 +156,15 @@ void View::notify(Subject *subject) {
 }
 
 void View::notify(Engine *engine) {
+    if (engine->getGameOver()) {
+         SDL_Surface *gameOverSurface = TTF_RenderText_Solid(arcadeFont, "Game Over", textColor);
+         position.x = SCREEN_WIDTH / 2 - gameOverSurface->w;
+         position.y = SCREEN_HEIGHT / 2 - gameOverSurface->h;
+         SDL_BlitSurface(gameOverSurface, NULL, screenSurface, &position);
+         SDL_UpdateWindowSurface(window);
+         SDL_Delay(2000);
+         return;
+    }
     std::string level = std::to_string(engine->getLevel()), score = std::to_string(engine->getScore()), highscore = std::to_string(engine->getHighscore());
     int maxLength = std::max(level.size(), highscore.size());
     int length = engine->getBoardLength(), height = engine->getBoardHeight();

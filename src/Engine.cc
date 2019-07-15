@@ -112,6 +112,7 @@ void Engine::run() {
     SDL_Event e;
     // Insert the first block in the board
     impl->board->attemptInsertBlockIntoBoard(impl->blockFactory.getNextBlock());
+    notifyObservers();
     while (true) {
         bool wasGameClosed = false;
         // Loop that checks if the game is closed by user
@@ -179,4 +180,8 @@ int Engine::getBoardHeight() {
 
 BlockType Engine::getNextBlock() {
     return impl->board->getNextBlock();
+}
+
+bool Engine::getGameOver() {
+    return impl->isGameOver;
 }
