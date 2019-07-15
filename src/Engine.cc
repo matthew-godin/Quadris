@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include <iostream>
 #include <cctype>
+#include <SDL2/SDL.h>
 
 using namespace std;
 
@@ -108,14 +109,28 @@ void Engine::notify(Subject* subject) {
 void Engine::run() {
     string input;
     string command;
-    
+    SDL_Event e;
     // Insert the first block in the board
     impl->board->attemptInsertBlockIntoBoard(impl->blockFactory.getNextBlock());
     while (true) {
+        bool wasGameClosed = false;
+        // Loop that checks if the game is closed by user
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+               wasGameClosed = true;
+               break;
+            }
+        }
+        
+        if (wasGameClosed) break;
+
+        // checks if game is over and closes the game
         if (impl->isGameOver) {
             std::cout << "GAME OVER" << std::endl;
             break;
         }
+
+        // Otherwise take input from user
         cin >> input;
 
         int i;
@@ -127,6 +142,9 @@ void Engine::run() {
         input = input.substr(i, input.size() - i);
         
         command = input; // impl->commandTrie.interpretInput(input);
+
+        
+
         if (command == "quit") {
             break;
         }

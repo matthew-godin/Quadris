@@ -1,7 +1,7 @@
 #include "../include/View.h"
 #include <iostream>
 
-View::View(std::ostream &sout, Engine *engine) : outStream{sout} {
+View::View(std::ostream &sout, Engine *engine): outStream{sout} {
     engine->attach(this);
     window = NULL;
     screenSurface = NULL;
@@ -18,19 +18,28 @@ View::View(std::ostream &sout, Engine *engine) : outStream{sout} {
         errorFile.open(ERR_FILE_LOC, std::ios_base::app);
         errorFile << "Failed to initialize!" << std::endl;
         errorFile.close();
-    }
-    else {
-        if (!loadMedia(&I_Block, "img/I.bmp") || !loadMedia(&J_Block, "img/J.bmp") || !loadMedia(&L_Block, "img/L.bmp") || !loadMedia(&O_Block, "img/O.bmp") || !loadMedia(&S_Block, "img/S.bmp") || !loadMedia(&Z_Block, "img/Z.bmp") || !loadMedia(&T_Block, "img/T.bmp") || !loadFont(&arcadeFont, "fonts/arcade.ttf", 80) || !loadMedia(&frame, "img/frame.bmp")) {
+    } else {
+        bool couldNotLoadMedia = !loadMedia(&I_Block, "img/I.bmp") || 
+            !loadMedia(&J_Block, "img/J.bmp") || 
+            !loadMedia(&L_Block, "img/L.bmp") || 
+            !loadMedia(&O_Block, "img/O.bmp") || 
+            !loadMedia(&S_Block, "img/S.bmp") || 
+            !loadMedia(&Z_Block, "img/Z.bmp") ||
+            !loadMedia(&T_Block, "img/T.bmp") ||
+            !loadFont(&arcadeFont, "fonts/arcade.ttf", 80) ||
+            !loadMedia(&frame, "img/frame.bmp");
+        
+        if ( couldNotLoadMedia ) {
             errorFile.open(ERR_FILE_LOC, std::ios_base::app);
             errorFile << "Failed to load media!" << std::endl;
             errorFile.close();
-        }
-        else {
+        } else {
             SDL_Surface *levelSurface = TTF_RenderText_Solid(arcadeFont, "Level:", textColor), *scoreSurface = TTF_RenderText_Solid(arcadeFont, "Score:", textColor), *highscoreSurface = TTF_RenderText_Solid(arcadeFont, "Highscore:", textColor), *nextSurface = TTF_RenderText_Solid(arcadeFont, "Next:", textColor);
             if (levelSurface == NULL || scoreSurface == NULL || highscoreSurface == NULL) {
-        errorFile.open(ERR_FILE_LOC);
-	errorFile << "Unable to render text surface! SDL_TTF_Error: " << TTF_GetError() << std::endl;
-	errorFile.close();
+                std::cout << "CREATED WINDOW" << std::endl;
+                errorFile.open(ERR_FILE_LOC);
+                errorFile << "Unable to render text surface! SDL_TTF_Error: " << TTF_GetError() << std::endl;
+                errorFile.close();
             }
             outStream << "Level:" << std::endl;
             position.x = 0;
@@ -90,34 +99,30 @@ void View::close(SDL_Window **window_) {
 
 bool View::init(SDL_Window **window_, SDL_Surface **screenSurface_) {
 	bool success = true;
-	if(SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		errorFile.open(ERR_FILE_LOC, std::ios_base::app);
 		errorFile << "SDL could not initialize! SDL_Error: " << SDL_GetError() << std::endl;
 		errorFile.close();
-                success = false;
-	}
-	else
-	{
+        success = false;
+	} else {
 		*window_ = SDL_CreateWindow("Quadris", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-		if(*window_ == NULL)
-		{
-                        errorFile.open(ERR_FILE_LOC, std::ios_base::app);
+		if (*window_ == NULL) {
+            errorFile.open(ERR_FILE_LOC, std::ios_base::app);
 			errorFile << "Window could not be created! SDL_Error: " << SDL_GetError() << std::endl;
                         errorFile.close();
 			success = false;		
-		}
-		else
-		{
+		} else {
 			*screenSurface_ = SDL_GetWindowSurface(*window_);
 		}
 	}
-        if (TTF_Init() < 0) {
-            errorFile.open(ERR_FILE_LOC, std::ios_base::app);
-	    errorFile << "SDL_TTF could not initialize! SDL_TTF_Error: " << TTF_GetError() << std::endl;
-	    errorFile.close();
-            success = false;
-        }
+    
+    if (TTF_Init() < 0) {
+        errorFile.open(ERR_FILE_LOC, std::ios_base::app);
+        errorFile << "SDL_TTF could not initialize! SDL_TTF_Error: " << TTF_GetError() << std::endl;
+        errorFile.close();
+        success = false;
+    }
+
 	return success;
 }
 
@@ -125,9 +130,9 @@ bool View::loadMedia(SDL_Surface **surface, char name[]) {
 	bool success = true;
 	*surface = SDL_LoadBMP(name);
 	if (*surface == NULL) {
-            errorFile.open(ERR_FILE_LOC, std::ios_base::app);
-            errorFile << "Unable to load image " << name << "! SDL Error: " << SDL_GetError() << std::endl;
-            errorFile.close();
+        errorFile.open(ERR_FILE_LOC, std::ios_base::app);
+        errorFile << "Unable to load image " << name << "! SDL Error: " << SDL_GetError() << std::endl;
+        errorFile.close();
 	    success = false;
 	}
 	return success;
@@ -137,9 +142,9 @@ bool View::loadFont(TTF_Font **font, char name[], int size) {
 	bool success = true;
 	*font = TTF_OpenFont(name, size);
 	if (*font == NULL) {
-            errorFile.open(ERR_FILE_LOC, std::ios_base::app);
-            errorFile << "Unable to load font " << name << "! SDL Error: " << TTF_GetError() << std::endl;
-            errorFile.close();
+        errorFile.open(ERR_FILE_LOC, std::ios_base::app);
+        errorFile << "Unable to load font " << name << "! SDL Error: " << TTF_GetError() << std::endl;
+        errorFile.close();
 	    success = false;
 	}
 	return success;
@@ -167,8 +172,8 @@ void View::notify(Engine *engine) {
     partialBottom.h = 25;
     if (levelSurface == NULL || scoreSurface == NULL || highscoreSurface == NULL) {
         errorFile.open(ERR_FILE_LOC);
-	errorFile << "Unable to render text surface! SDL_TTF_Error: " << TTF_GetError() << std::endl;
-	errorFile.close();
+        errorFile << "Unable to render text surface! SDL_TTF_Error: " << TTF_GetError() << std::endl;
+        errorFile.close();
     }
     SDL_FillRect(screenSurface, NULL, 0x000000);
     outStream << levelString << std::endl;

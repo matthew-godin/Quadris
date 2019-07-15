@@ -36,9 +36,10 @@ class View : public Observer {
     bool quit;
     SDL_Event e;
     View(std::ostream &, Engine *engine);
+    ~View();
+
     void notify(Subject*) override;
     void notify(Engine*);
-    ~View();
 };
 
 #endif
