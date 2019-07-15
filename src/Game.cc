@@ -3,12 +3,10 @@
 using std::make_shared;
 using std::istream;
 
-Game::Game(): 
-view{make_shared<View>()},
-board{make_shared<Board>()}, 
-engine{make_shared<Engine>(board, view)} {
-
-}
+Game::Game(int level, string inputFile) : 
+    view{make_shared<View>()},
+    board{make_shared<Board>()}, 
+    engine{make_shared<Engine>(board, view, level, inputFile)} {}
 
 Game::~Game() {
     board.reset();
@@ -16,8 +14,8 @@ Game::~Game() {
     view.reset();
 }
 
-void Game::start(std::istream& inputStream) {
-    engine->run(inputStream);
+void Game::start() {
+    engine->run();
 }
 
 ostream& operator<<(ostream& out, const Game& game) {

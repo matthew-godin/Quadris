@@ -1,7 +1,13 @@
 #include "../include/Board.h"
+#include <vector>
+
+using std::vector;
+typedef pair<int, int> int_pair;
+
+// Default Methods
 
 Board::Board(): 
-board{vector<vector<BlockType>>(18, vector<BlockType>(11, BlockType::EMPTY))},
+board{vector<vector<BlockType>>(Board::MAX_BOARD_ROWS, vector<BlockType>(Board::MAX_BOARD_COLUMNS, BlockType::EMPTY))},
 currentBlock{nullptr} {
     // Initialize board with empty blocks
 
@@ -11,37 +17,165 @@ Board::~Board() {
     // Deallocate any owned resources
 }
 
+// Private Methods
+
 void Board::emptyFilledRow(int rowIndex) {
     // Private method that empties out a particular row
 }
 
+// Requires: rowIndex & columnIndex are within bounds of the board
+bool Board::isBoardEmptyAt(std::pair<int, int> coordinate) {
+    int rowIndex = coordinate.first;
+    int columnIndex = coordinate.second;
+    return board.at(rowIndex).at(columnIndex) == BlockType::EMPTY;
+}
+
+// Overridden Observer Methods
+
+void Board::notify(Subject* subject) {
+    // Consider this to be a block. Update your board accordingly
+    shared_ptr<Block> modifiedBlock = nullptr;
+    for (auto &block: blocks) {
+        if (subject == block.get()) {
+            modifiedBlock = block;
+        }
+    }
+    
+    if (modifiedBlock != nullptr) {
+        // Update view with modified block
+        auto oldTiles = modifiedBlock->getPreviousTiles();
+        auto newTiles = modifiedBlock->getTiles();
+
+        for  (int i = 0; i < oldTiles.size(); i++) {
+            board.at(oldTiles.at(i).first).at(oldTiles.at(i).second) = BlockType::EMPTY;
+        }
+
+        for  (int i = 0; i < newTiles.size(); i++) {
+            board.at(newTiles.at(i).first).at(newTiles.at(i).second) = modifiedBlock->getBlockType();
+        }
+        
+    }
+
+    return;
+}
+
+// Public interface methods
+
 void Board::reset() {
+    // Empty the board
 
+    // Empty the blocks vector
+
+    // Empty the blocks queue
+
+    // Remove the reference to the current block
 }
 
-void Board::attemptMoveLeft() {
-    // shift current block to the left
+bool Board::attemptInsertBlockIntoBoard(shared_ptr<Block> b) {
+    // vector as current block
+    currentBlock = b;
+    // Add this as observer
+    b->attach(this);
+    // Add block to blocks
+    blocks.emplace_back(b);
+    // Add to blocks queue
+    if (queuedBlocks.size() == Board::MAX_QUEUE_SIZE) {
+        // Empty queue, maybe clear the last line
+    }
+    queuedBlocks.push(b);
+    // Add block to board
+    for (auto &coordinate: b->getTiles()) {
+        if (board.at(coordinate.first).at(coordinate.second) != BlockType::EMPTY) return false;
+        board.at(coordinate.first).at(coordinate.second) = b->getBlockType();
+    }
+
+    std::cout << *this << std::endl;
+    return true;
+}
+bool Board::attemptMoveLeft() {
+    if (currentBlock == nullptr) return false;
+    auto positions = currentBlock->getTiles();
+    // Calculate bounds within which the board can move
+    for (auto &coordinate: positions) {
+        // already at the left-most position within board
+        if (coordinate.second == 0) {
+            return false;
+        }
+        
+        auto futureCoordinate = coordinate;
+        futureCoordinate.second--;
+        bool isNotSameBlock = find(positions.begin(), positions.end(), futureCoordinate) == positions.end();
+        if (isNotSameBlock && !isBoardEmptyAt(futureCoordinate)) {
+            return false;
+        }
+    }
+
+    currentBlock->moveLeft();
+    std::cout << *this << std::endl;
+    return true;
 }
 
-void Board::attemptMoveRight() {
-    // shift current block to the right
+bool Board::attemptMoveRight() {
+    vector<int_pair> positions = currentBlock->getTiles();
+    
+    for (int_pair & coordinate : positions) {
+        if (coordinate.second == Board::MAX_BOARD_COLUMNS - 1) {
+            return false;
+        }
+        
+        int_pair futureCoordinate = coordinate;
+        futureCoordinate.second++;
+
+        bool isNotSameBlock = find(positions.begin(), positions.end(), futureCoordinate) == positions.end();
+        if (isNotSameBlock && !isBoardEmptyAt(futureCoordinate)) {
+            return false;
+        }
+    }
+    currentBlock->moveRight();
+    std::cout << *this << std::endl;
+    return true;
 }
 
-void Board::attemptMoveDown() {
-    // move block down
+bool Board::moveDown() {
+    
+    currentBlock->moveDown();
+    vector<int_pair> positions = currentBlock->getTiles();
+
+    for (int_pair & coordinate: positions) {
+        if (coordinate.first == Board::MAX_BOARD_ROWS - 1) {
+            return false;
+        }
+        auto futureCoordinate(coordinate);
+        futureCoordinate.first++;
+        bool isNotSameBlock = find(positions.begin(), positions.end(), futureCoordinate) == positions.end();
+        if (isNotSameBlock && !isBoardEmptyAt(futureCoordinate)) {
+            return false;
+        }
+    }
+
+    std::cout << *this << std::endl;
+
+    return true;
 }
 
-void Board::attemptRotateCW() {
+bool Board::attemptRotateCW() {
     // Rotate block clockwise
+    return false;
 }
 
-void Board::attemptRotateCCW() {
+bool Board::attemptRotateCCW() {
     // Rotate block counter-clockwise
+    return false;
 }
 
 void Board::dropToBottom() {
     // take the current block and attempt to move down till
     // it is a valid operation
+
+    while (true) {
+        bool wasMoveDownSuccessful = moveDown();
+        if (!wasMoveDownSuccessful) break;
+    }
 }
 
 void Board::checkForFilledRow() {
