@@ -89,8 +89,6 @@ bool Board::attemptInsertBlockIntoBoard(shared_ptr<Block> b) {
         if (board.at(coordinate.first).at(coordinate.second) != BlockType::EMPTY) return false;
         board.at(coordinate.first).at(coordinate.second) = b->getBlockType();
     }
-
-    std::cout << *this << std::endl;
     return true;
 }
 bool Board::attemptMoveLeft() {
@@ -133,7 +131,6 @@ bool Board::attemptMoveRight() {
         }
     }
     currentBlock->moveRight();
-    std::cout << *this << std::endl;
     return true;
 }
 
@@ -153,8 +150,6 @@ bool Board::moveDown() {
             return false;
         }
     }
-
-    std::cout << *this << std::endl;
 
     return true;
 }
