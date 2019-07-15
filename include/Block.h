@@ -6,7 +6,7 @@
 using std::vector;
 using std::pair;
 
-enum BlockType {
+enum BlockType: char {
     I = 'I',
     J = 'J',
     L = 'L',
@@ -17,15 +17,22 @@ enum BlockType {
     EMPTY = ' '
 };
 
+
+
 class Block: public Subject {
     BlockType blockType;
+    bool hasReachedBottom;
+    
     // Order of tile positions doesn't matter
     vector<pair<int, int>> tilePositions;
+    // Previous tile positions
+    vector<pair<int, int>> previousTilePositions;
 
+    
     static vector<pair<int,int>> getInitialTilePositionForType(BlockType);
-    char getBlockUnit();
 public:
-    Block(BlockType);
+    Block(BlockType type);
+    
     ~Block();
     
     void moveDown();
@@ -33,6 +40,12 @@ public:
     void moveRight();
     void rotateCW();
     void rotateCCW();
+
+    void didReachBottom();
+
+    vector<pair<int, int>> getTiles();
+    vector<pair<int, int>> getPreviousTiles();
+    BlockType getBlockType();
 };
 
 #endif

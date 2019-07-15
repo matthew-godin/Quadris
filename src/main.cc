@@ -5,10 +5,12 @@
 using namespace std;
 
 int main(int argc, char **argv) {
+    
     bool isText = false;
     float seed = 0.0;
-    string scriptFile = "";
+
     int startLevel = 0;
+    string scriptFile = "sequence.txt";
 
     if (argc > 1) {
         for (int i = 1; i < argc; ++i) {
@@ -46,8 +48,8 @@ int main(int argc, char **argv) {
         }
     }
 
-    Game game;
-    // game.start(cin);
-    cout << game;
+    Game game(startLevel, scriptFile);
+    game.start();
+
     return 0;
 }

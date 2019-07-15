@@ -1,70 +1,32 @@
 #include "Engine.h"
+#include <iostream>
+#include <cctype>
 
 using namespace std;
 
 // Constructors
-Engine::EngineImpl::EngineImpl(shared_ptr<Board> b, shared_ptr<View> v, int level): 
-level{level},
-score{0},
-highScore{0},
-isGettingRandomBlocks{false},
-commandTrie{nullptr},
-view{v},
-board{b},
-currentBlock{nullptr} {}
+Engine::Engine(shared_ptr<Board> b, shared_ptr<View> v, int level, string inputFile): 
+    impl{make_unique<EngineImpl>(b, v, level, inputFile)} {}
+
+Engine::~Engine() {}
+
+Engine::EngineImpl::EngineImpl(shared_ptr<Board> b, shared_ptr<View> v, int level, string inputFile): 
+    level{level},
+    score{0},
+    highScore{0},
+    isGettingRandomBlocks{false},
+    isGameOver{false},
+    blockFactory{BlockFactory(level, inputFile)},
+    commandTrie{nullptr},
+    view{v},
+    board{b},
+    currentBlock{nullptr} {}
 
 Engine::EngineImpl::~EngineImpl() {
     commandTrie.release();
 }
 
-Engine::Engine(shared_ptr<Board> b, shared_ptr<View> v): 
-impl{make_unique<EngineImpl>(b, v, 0)} {}
-Engine::~Engine() {}
-
-// Private method
-
-void Engine::levelUp() {
-    if (impl->level + 1 <= Engine::MAX_LEVEL) {
-        ++impl->level;
-    }
-}
-
-void Engine::levelDown() {
-    if (impl->level - 1 >= Engine::MIN_LEVEL) {
-        --impl->level;
-    }
-}
-
-void Engine::processInputFile() {
-
-}
-
-void Engine::restart() {
-    // Implement board->reset()
-    impl->board->reset();
-}
-
-// Overriden methods
-
-void Engine::notify(Subject * subject) {
-
-}
-
-// Public methods
-
-void Engine::run(std::istream &in) {
-    string input;
-    string command;
-    while (true) {
-        in >> input;
-        cout << "Input detected " << input << endl;
-        command = input;
-        // command = impl->commandTrie.interpretInput(input);
-        if (command == "quit") break;
-        performCommand(command);
-    }
-}
-
+// Private methods
 // requires: command is always valid, numRepititions is the number of times to perform the command
 void Engine::performCommand(string command, int numRepititions) {
     if (command == "left") {
@@ -72,13 +34,27 @@ void Engine::performCommand(string command, int numRepititions) {
     } else if (command == "right") {
         for (int i = 0; i < numRepititions; ++i) impl->board->attemptMoveRight();
     } else if (command == "down") {
-        for (int i = 0; i < numRepititions; ++i) impl->board->attemptMoveDown();
+        for (int i = 0; i < numRepititions; ++i) {
+            bool blockCanMoveDownAgain = impl->board->moveDown();
+            if (!blockCanMoveDownAgain) {
+                bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->blockFactory.getNextBlock());
+                if (!wasInsertSuccessful) {
+                    impl->isGameOver = true;
+                }
+            }
+        }
     } else if (command == "clockwise") {
         for (int i = 0; i < numRepititions; ++i) impl->board->attemptRotateCW();
     } else if (command == "counterclockwise") {
         for (int i = 0; i < numRepititions; ++i) impl->board->attemptRotateCCW();
     } else if (command == "drop") {
-        for (int i = 0; i < numRepititions; ++i) impl->board->dropToBottom();
+        for (int i = 0; i < numRepititions; ++i) {
+            impl->board->dropToBottom();
+            bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->blockFactory.getNextBlock());
+            if (!wasInsertSuccessful) {
+                impl->isGameOver = true;
+            }
+        }
     } else if (command == "levelup") {
         for (int i = 0; i < numRepititions; ++i) levelUp();
     } else if (command == "leveldown") {
@@ -98,11 +74,63 @@ void Engine::performCommand(string command, int numRepititions) {
 
         // cast string command to I, J, and other block types
         // Assuming that the string is of length 1 
-        BlockType b = static_cast<BlockType>(command.front());
+        // BlockType b = static_cast<BlockType>(command.front());
         
         // Replace current block with block of this type
     }
+}
 
+void Engine::levelUp() {
+    if (impl->level + 1 <= Engine::MAX_LEVEL) {
+        ++impl->level;
+        impl->blockFactory.incrementLevel();
+    }
+}
+
+void Engine::levelDown() {
+    if (impl->level - 1 >= Engine::MIN_LEVEL) {
+        --impl->level;
+        impl->blockFactory.decrementLevel();
+    }
+}
+
+void Engine::restart() {
+    // Implement board->reset()
+    impl->board->reset();
+    // Reset score
+}
+
+// Overriden methods
+void Engine::notify(Subject* subject) {
+
+}
+
+// Public methods
+void Engine::run() {
+    string input;
+    string command;
     
-    
+    // Insert the first block in the board
+    impl->board->attemptInsertBlockIntoBoard(impl->blockFactory.getNextBlock());
+    while (true) {
+        if (impl->isGameOver) {
+            std::cout << "GAME OVER" << std::endl;
+            break;
+        }
+        cin >> input;
+
+        int i;
+        for (i = 0; i < input.size(); i++) {
+            if (!isdigit(input.at(i))) break;
+        }
+
+        int numRepititions = input.substr(0, i).size() > 0 ? stoi(input.substr(0, i)) : 1;
+        input = input.substr(i, input.size() - i);
+        
+        command = input; // impl->commandTrie.interpretInput(input);
+        if (command == "quit") {
+            break;
+        }
+        performCommand(command, numRepititions);
+    }
 }

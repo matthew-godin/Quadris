@@ -8,6 +8,7 @@
 
 using std::ostream;
 using std::shared_ptr;
+using std::string;
 
 class Game {
     // Model
@@ -18,10 +19,10 @@ class Game {
     shared_ptr<Engine> engine;
 
 public:
-    Game();
+    Game(int, string);
     ~Game();
 
-    void start(std::istream&);
+    void start();
 
     friend ostream& operator<<(ostream&, const Game& game);
 };
