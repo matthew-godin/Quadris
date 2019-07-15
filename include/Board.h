@@ -34,6 +34,11 @@ public:
     void checkForFilledRow();
 
     friend ostream& operator<<(ostream&, const Board& b);
+
+    BlockType getTypeAt(int i, int j);
+    int getBoardLength();
+    int getBoardHeight();
+    BlockType getNextBlock();
 };
 
 #endif

@@ -59,6 +59,14 @@ class Engine: public Observer, public Subject {
 
         void run(std::istream&);
         void performCommand(string command, int numRepititions = 1);
+
+        int getLevel();
+        int getScore();
+        int getHighscore();
+        BlockType getTypeAt(int i, int j);
+        int getBoardLength();
+        int getBoardHeight();
+        BlockType getNextBlock();
 };
 
 #endif
