@@ -1,5 +1,5 @@
 CXX = g++ # This is the main compiler
-CXXFLAGS = -std=c++14 -Wall
+CXXFLAGS = -std=c++14 -Wall -w -lSDL2 -lSDL2_ttf
 
 SRCDIR = src
 BUILDDIR = build
@@ -15,7 +15,7 @@ INC = -I include
 $(TARGET): $(OBJECTS)
 	@echo "Linking..."
 	@mkdir -p ${TARGETDIR}
-	$(CXX) $^ -o $(TARGET)
+	$(CXX) $^ -w -lSDL2 -lSDL2_ttf -o $(TARGET)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(BUILDDIR)

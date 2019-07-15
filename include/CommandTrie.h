@@ -13,7 +13,7 @@ class CommandTrie {
         char letter;
         bool terminalLetter;
         string suggestion;
-        unordered_map<char, TrieNode> children;
+        //unordered_map<char, TrieNode> children;
     
         public:
             TrieNode(char);

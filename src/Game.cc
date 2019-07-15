@@ -4,9 +4,9 @@ using std::make_shared;
 using std::istream;
 
 Game::Game(int level, string inputFile) : 
-    view{make_shared<View>()},
     board{make_shared<Board>()}, 
-    engine{make_shared<Engine>(board, view, level, inputFile)} {}
+    engine{make_shared<Engine>(board, level, inputFile)},
+    view{make_shared<View>(std::cout, engine.get())} {}
 
 Game::~Game() {
     board.reset();

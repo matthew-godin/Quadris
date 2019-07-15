@@ -1,5 +1,6 @@
 #include "../include/Board.h"
 #include <vector>
+#include <algorithm>
 
 using std::vector;
 typedef pair<int, int> int_pair;
@@ -168,7 +169,7 @@ bool Board::attemptRotateCCW() {
     return false;
 }
 
-void Board::dropToBottom() {
+bool Board::dropToBottom() {
     // take the current block and attempt to move down till
     // it is a valid operation
 
@@ -176,6 +177,7 @@ void Board::dropToBottom() {
         bool wasMoveDownSuccessful = moveDown();
         if (!wasMoveDownSuccessful) break;
     }
+    return true;
 }
 
 void Board::checkForFilledRow() {
@@ -192,4 +194,20 @@ ostream& operator<<(ostream& out, const Board& b) {
     }
 
     return out;
+}
+
+BlockType Board::getTypeAt(int i, int j) {
+    return board[i][j];
+}
+
+int Board::getBoardLength() {
+    return board[0].size();
+}
+
+int Board::getBoardHeight() {
+    return board.size();
+}
+
+BlockType Board::getNextBlock() {
+    return queuedBlocks.front()->getBlockType();
 }

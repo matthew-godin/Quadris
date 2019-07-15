@@ -5,12 +5,12 @@
 using namespace std;
 
 // Constructors
-Engine::Engine(shared_ptr<Board> b, shared_ptr<View> v, int level, string inputFile): 
-    impl{make_unique<EngineImpl>(b, v, level, inputFile)} {}
+Engine::Engine(shared_ptr<Board> b, int level, string inputFile): 
+    impl{make_unique<EngineImpl>(b, level, inputFile)} {}
 
 Engine::~Engine() {}
 
-Engine::EngineImpl::EngineImpl(shared_ptr<Board> b, shared_ptr<View> v, int level, string inputFile): 
+Engine::EngineImpl::EngineImpl(shared_ptr<Board> b, int level, string inputFile): 
     level{level},
     score{0},
     highScore{0},
@@ -18,7 +18,6 @@ Engine::EngineImpl::EngineImpl(shared_ptr<Board> b, shared_ptr<View> v, int leve
     isGameOver{false},
     blockFactory{BlockFactory(level, inputFile)},
     commandTrie{nullptr},
-    view{v},
     board{b},
     currentBlock{nullptr} {}
 
@@ -132,5 +131,34 @@ void Engine::run() {
             break;
         }
         performCommand(command, numRepititions);
+        notifyObservers();
     }
+}
+
+int Engine::getLevel() {
+    return impl->level;
+}
+
+int Engine::getScore() {
+    return impl->score;
+}
+
+int Engine::getHighscore() {
+    return impl->highScore;
+}
+
+BlockType Engine::getTypeAt(int i, int j) {
+    return impl->board->getTypeAt(i, j);
+}
+
+int Engine::getBoardLength() {
+    return impl->board->getBoardLength();
+}
+
+int Engine::getBoardHeight() {
+    return impl->board->getBoardHeight();
+}
+
+BlockType Engine::getNextBlock() {
+    return impl->board->getNextBlock();
 }

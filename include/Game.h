@@ -13,10 +13,10 @@ using std::string;
 class Game {
     // Model
     shared_ptr<Board> board;
-    // View
-    shared_ptr<View> view;
     // Controller
     shared_ptr<Engine> engine;
+    // View
+    shared_ptr<View> view;
 
 public:
     Game(int, string);

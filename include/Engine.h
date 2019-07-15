@@ -12,7 +12,6 @@
 #include "Subject.h"
 #include "Board.h"
 #include "CommandTrie.h"
-#include "View.h"
 #include "BlockFactory.h"
 
 using std::shared_ptr;
@@ -20,7 +19,6 @@ using std::unique_ptr;
 using std::queue;
 using std::string;
 using std::unordered_map;
-
 class Engine: public Observer, public Subject {
     static const size_t MIN_LEVEL = 0;
     static const size_t MAX_LEVEL = 4;
@@ -33,14 +31,12 @@ class Engine: public Observer, public Subject {
         bool isGameOver;
         BlockFactory blockFactory;
         unique_ptr<CommandTrie> commandTrie;
-        // Main View
-        shared_ptr<View> view;
         // Main Board
         shared_ptr<Board> board;
         shared_ptr<Block> currentBlock;
         queue<shared_ptr<Block>> queuedBlocks;
 
-        EngineImpl(shared_ptr<Board>, shared_ptr<View>, int, string);
+        EngineImpl(shared_ptr<Board>, int, string);
         ~EngineImpl();
     };
 
@@ -52,7 +48,7 @@ class Engine: public Observer, public Subject {
     void restart();
     
     public:
-        Engine(shared_ptr<Board>, shared_ptr<View>, int, string);
+        Engine(shared_ptr<Board>, int, string);
         ~Engine();
         Engine(const Engine&);
         Engine(const Engine&&);
