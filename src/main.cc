@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     }
 
     Game game;
-    game.start();
-
+    // game.start(cin);
+    cout << game;
     return 0;
 }

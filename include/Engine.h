@@ -12,6 +12,7 @@
 #include "Subject.h"
 #include "Board.h"
 #include "CommandTrie.h"
+#include "View.h"
 
 using std::shared_ptr;
 using std::unique_ptr;
@@ -20,17 +21,23 @@ using std::string;
 using std::unordered_map;
 
 class Engine: public Observer, public Subject {
-
+    static const size_t MIN_LEVEL = 0;
+    static const size_t MAX_LEVEL = 4;
     struct EngineImpl {
         int level;
         int score;
         int highScore;
         bool isGettingRandomBlocks;
-        CommandTrie commandTrie;
+        unique_ptr<CommandTrie> commandTrie;
+        // Main View
+        shared_ptr<View> view;
         // Main Board
         shared_ptr<Board> board;
         shared_ptr<Block> currentBlock;
-        queue<Block> queuedBlocks;
+        queue<shared_ptr<Block>> queuedBlocks;
+
+        EngineImpl(shared_ptr<Board> b, shared_ptr<View> v, int level = 0);
+        ~EngineImpl();
     };
 
     unique_ptr<EngineImpl> impl;
@@ -41,7 +48,7 @@ class Engine: public Observer, public Subject {
     void restart();
     
     public:
-        Engine();
+        Engine(shared_ptr<Board>, shared_ptr<View>);
         ~Engine();
         Engine(const Engine&);
         Engine(const Engine&&);
@@ -50,8 +57,8 @@ class Engine: public Observer, public Subject {
 
         void notify(Subject*) override;
 
-        void run();
-        void performCommand(string);
+        void run(std::istream&);
+        void performCommand(string command, int numRepititions = 1);
 };
 
 #endif
