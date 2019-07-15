@@ -188,7 +188,7 @@ void View::notify(Engine *engine) {
     position.y += 10;
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < length; ++j) {
-            switch (engine->getTypeAt(j, i)) {
+            switch (engine->getTypeAt(i, j)) {
                 case BlockType::I:
                     outStream << "I";
                     SDL_BlitSurface(I_Block, &partialTop, screenSurface, &position);
