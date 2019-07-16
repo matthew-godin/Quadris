@@ -158,8 +158,8 @@ void View::notify(Subject *subject) {
 void View::notify(Engine *engine) {
     if (engine->getGameOver()) {
          SDL_Surface *gameOverSurface = TTF_RenderText_Solid(arcadeFont, "Game Over", textColor);
-         position.x = SCREEN_WIDTH / 2 - gameOverSurface->w;
-         position.y = SCREEN_HEIGHT / 2 - gameOverSurface->h;
+         position.x = SCREEN_WIDTH / 2 - gameOverSurface->w / 2;
+         position.y = SCREEN_HEIGHT / 2 - gameOverSurface->h / 2;
          SDL_BlitSurface(gameOverSurface, NULL, screenSurface, &position);
          SDL_UpdateWindowSurface(window);
          SDL_Delay(2000);
