@@ -202,10 +202,8 @@ bool Board::canMoveDownAgain() {
 }
 
 bool Board::moveDown() {
-    if (!canMoveDownAgain()) {
-        return false;
-    }
     currentBlock->moveDown();
+    if (!canMoveDownAgain()) return false;
     return true;
 } 
 
