@@ -165,6 +165,7 @@ void View::notify(Engine *engine) {
          SDL_Delay(2000);
          return;
     }
+    int centerX = SCREEN_WIDTH / 2 - 295 / 2;
     std::string level = std::to_string(engine->getLevel()), score = std::to_string(engine->getScore()), highscore = std::to_string(engine->getHighscore());
     int maxLength = std::max(level.size(), highscore.size());
     int length = engine->getBoardLength(), height = engine->getBoardHeight();
@@ -186,7 +187,7 @@ void View::notify(Engine *engine) {
     }
     SDL_FillRect(screenSurface, NULL, 0x000000);
     outStream << levelString << std::endl;
-    position.x = 0;
+    position.x = centerX;
     position.y = 0;
     SDL_BlitSurface(levelSurface, NULL, screenSurface, &position);
     outStream << scoreString << std::endl;
@@ -238,10 +239,10 @@ void View::notify(Engine *engine) {
             position.x += 25;
         }
         outStream << std::endl;
-        position.x = 10;
+        position.x = 10 + centerX;
         position.y += 25;
     }
-    position.x = 0;
+    position.x = centerX;
     position.y += 10;
     outStream << std::string(11, '-') << std::endl;
     outStream << "Next:" << std::endl;

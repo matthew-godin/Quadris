@@ -17,8 +17,8 @@ class View : public Observer {
     void freeSurface(SDL_Surface **surface);
     void freeFont(TTF_Font **font);
     void close(SDL_Window **window);
-    const int SCREEN_WIDTH = 500;
-    const int SCREEN_HEIGHT = 800;
+    const int SCREEN_WIDTH = 360;
+    const int SCREEN_HEIGHT = 710;
     SDL_Surface *screenSurface;
     SDL_Surface *I_Block;
     SDL_Surface *J_Block;
