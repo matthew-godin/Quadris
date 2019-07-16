@@ -91,8 +91,10 @@ vector<int_pair> Block::getInitialTilePositionForType(BlockType type, int &minX,
     }
 }
 
-Block::Block(BlockType type): 
+Block::Block(BlockType type, int level): 
 blockType{type},
+blockLevel{level},
+isHeavy{level >= 3 ? true : false},
 hasReachedBottom{false},
 tilePositions{Block::getInitialTilePositionForType(type, minX, minY, maxX, maxY)},
 previousTilePositions{Block::getInitialTilePositionForType(type, minX, minY, maxX, maxY)} {}
@@ -173,6 +175,14 @@ vector<int_pair> Block::getPreviousTiles() {
 
 BlockType Block::getBlockType() {
     return blockType;
+}
+
+int Block::getLevel() { 
+    return blockLevel; 
+}
+
+bool Block::isAHeavyBlock() {
+    return isHeavy;
 }
 
 int Block::getMinX() {

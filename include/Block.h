@@ -21,6 +21,8 @@ enum BlockType: char {
 
 class Block: public Subject {
     BlockType blockType;
+    int blockLevel;
+    bool isHeavy;
     bool hasReachedBottom;
     
     // Order of tile positions doesn't matter
@@ -32,7 +34,7 @@ class Block: public Subject {
     
     static vector<pair<int,int>> getInitialTilePositionForType(BlockType, int&, int&, int&, int&);
 public:
-    Block(BlockType type);
+    Block(BlockType, int);
     
     ~Block();
     
@@ -47,6 +49,8 @@ public:
     vector<pair<int, int>> getTiles();
     vector<pair<int, int>> getPreviousTiles();
     BlockType getBlockType();
+    int getLevel();
+    bool isAHeavyBlock();
 
     int getMinX();
     int getMinY();

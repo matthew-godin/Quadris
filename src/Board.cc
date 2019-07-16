@@ -33,7 +33,7 @@ void Board::moveBlocksDown(int lastEmptyRow) {
     if (lastEmptyRow < 4 || lastEmptyRow >= Board::MAX_BOARD_ROWS) return;
 
     int numRowsToMoveDown = board.size() - lastEmptyRow;
-    std::cout << "Moving row " << lastEmptyRow - 1 << " down by " << numRowsToMoveDown << (numRowsToMoveDown == 1 ? " row" : " rows") << std::endl;
+    
     for (int i = lastEmptyRow - 1; i >= 3; --i) {
         bool isAnEntireLineEmpty = true;
         for (int j = 0; j < Board::MAX_BOARD_COLUMNS; ++j) {
@@ -60,24 +60,6 @@ bool Board::isBoardEmptyAt(std::pair<int, int> coordinate) {
     int rowIndex = coordinate.first;
     int columnIndex = coordinate.second;
     return board.at(rowIndex).at(columnIndex) == BlockType::EMPTY;
-}
-
-void Board::checkForFilledRow() {
-    int lastEmptyRow = board.size();
-    // parse throw board
-    for (int back = board.size() - 1; back > 3; --back) {
-        bool isFull = true;
-        for (auto column: board.at(back)) {
-            isFull = isFull && (column != BlockType::EMPTY);
-            if (!isFull) break;
-        }
-        if (isFull) {
-            std::cout << "Row " << back << " is full." << std::endl;
-            emptyFilledRow(back);
-            lastEmptyRow = back;
-            moveBlocksDown(lastEmptyRow);
-        }
-    }
 }
 
 // Overridden Observer Methods
@@ -258,6 +240,23 @@ bool Board::dropToBottom() {
         if (!wasMoveDownSuccessful) break;
     }
     return true;
+}
+
+void Board::checkForFilledRow() {
+    int lastEmptyRow = board.size();
+    // parse throw board
+    for (int back = board.size() - 1; back > 3; --back) {
+        bool isFull = true;
+        for (auto column: board.at(back)) {
+            isFull = isFull && (column != BlockType::EMPTY);
+            if (!isFull) break;
+        }
+        if (isFull) {
+            emptyFilledRow(back);
+            lastEmptyRow = back;
+            moveBlocksDown(lastEmptyRow);
+        }
+    }
 }
 
 ostream& operator<<(ostream& out, const Board& b) {
