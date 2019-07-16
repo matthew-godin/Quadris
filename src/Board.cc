@@ -134,9 +134,7 @@ bool Board::attemptMoveRight() {
     return true;
 }
 
-bool Board::moveDown() {
-    
-    currentBlock->moveDown();
+bool Board::canMoveDownAgain() {
     vector<int_pair> positions = currentBlock->getTiles();
 
     for (int_pair & coordinate: positions) {
@@ -150,9 +148,16 @@ bool Board::moveDown() {
             return false;
         }
     }
-
     return true;
 }
+
+bool Board::moveDown() {
+    if (!canMoveDownAgain()) {
+        return false;
+    }
+    currentBlock->moveDown();
+    return true;
+} 
 
 bool Board::attemptRotateCW() {
     // Rotate block clockwise

@@ -23,6 +23,7 @@ class Board: public Observer {
 
     void emptyFilledRow(int);
     bool isBoardEmptyAt(pair<int, int>);
+    bool canMoveDownAgain();
 public:
     Board();
     
