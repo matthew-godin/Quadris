@@ -130,7 +130,6 @@ void Block::moveRight() {
 }
 
 void Block::rotateCW() {
-    // TODO
     int temp;
     for (auto &tile: tilePositions) {
         temp = tile.first;
@@ -147,7 +146,6 @@ void Block::rotateCW() {
 }
 
 void Block::rotateCCW() {
-    // TODO
     int temp;
     for (auto &tile: tilePositions) {
         temp = tile.first;
