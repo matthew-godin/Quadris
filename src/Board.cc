@@ -156,12 +156,44 @@ bool Board::moveDown() {
 
 bool Board::attemptRotateCW() {
     // Rotate block clockwise
-    return false;
+    vector<int_pair> positions = currentBlock->getTiles();
+    int temp;
+    for (int_pair & coordinate : positions) {
+        auto futureCoordinate(coordinate);
+        temp = futureCoordinate.first;
+        futureCoordinate.first = currentBlock->getMaxY() - (currentBlock->getMaxX() - futureCoordinate.second);
+        futureCoordinate.second = currentBlock->getMinX() + (currentBlock->getMaxY() - temp);
+        if (futureCoordinate.first >= Board::MAX_BOARD_ROWS || futureCoordinate.second < 0 || futureCoordinate.second >= Board::MAX_BOARD_COLUMNS) {
+            return false;
+        }
+        bool isNotSameBlock = find(positions.begin(), positions.end(), futureCoordinate) == positions.end();
+        if (isNotSameBlock && !isBoardEmptyAt(futureCoordinate)) {
+            return false;
+        }
+    }
+    currentBlock->rotateCW();
+    return true;
 }
 
 bool Board::attemptRotateCCW() {
     // Rotate block counter-clockwise
-    return false;
+    vector<int_pair> positions = currentBlock->getTiles();
+    int temp;
+    for (int_pair & coordinate : positions) {
+        auto futureCoordinate(coordinate);
+        temp = futureCoordinate.first;
+        futureCoordinate.first = currentBlock->getMaxY() - (currentBlock->getMaxX() - futureCoordinate.second);
+        futureCoordinate.second = currentBlock->getMinX() + (currentBlock->getMaxY() - temp);
+        if (futureCoordinate.first >= Board::MAX_BOARD_ROWS || futureCoordinate.second < 0 || futureCoordinate.second >= Board::MAX_BOARD_COLUMNS) {
+            return false;
+        }
+        bool isNotSameBlock = find(positions.begin(), positions.end(), futureCoordinate) == positions.end();
+        if (isNotSameBlock && !isBoardEmptyAt(futureCoordinate)) {
+            return false;
+        }
+    }
+    currentBlock->rotateCCW();
+    return true;
 }
 
 bool Board::dropToBottom() {
