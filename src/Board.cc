@@ -202,7 +202,3 @@ int Board::getBoardLength() {
 int Board::getBoardHeight() {
     return board.size();
 }
-
-BlockType Board::getNextBlock() {
-    return queuedBlocks.front()->getBlockType();
-}

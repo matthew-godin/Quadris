@@ -52,7 +52,6 @@ public:
     BlockType getTypeAt(int i, int j);
     int getBoardLength();
     int getBoardHeight();
-    BlockType getNextBlock();
 };
 
 #endif
