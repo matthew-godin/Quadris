@@ -39,7 +39,8 @@ void Engine::performCommand(string command, int numRepititions) {
             if (!blockCanMoveDownAgain) {
                 bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->nextBlock);
                 impl->nextBlock = impl->blockFactory.getNextBlock();
-                impl->board->checkForFilledRow();
+                int increaseInScore = impl->board->checkForFilledRow(impl->level);
+                updateScore(increaseInScore);
                 if (!wasInsertSuccessful) {
                     impl->isGameOver = true;
                 }
@@ -54,7 +55,8 @@ void Engine::performCommand(string command, int numRepititions) {
             impl->board->dropToBottom();
             bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->nextBlock);
             impl->nextBlock = impl->blockFactory.getNextBlock();
-            impl->board->checkForFilledRow();
+            int increaseInScore = impl->board->checkForFilledRow(impl->level);
+            updateScore(increaseInScore);
             if (!wasInsertSuccessful) {
                 impl->isGameOver = true;
             }
@@ -84,6 +86,10 @@ void Engine::performCommand(string command, int numRepititions) {
     }
 }
 
+void Engine::updateScore(int increaseInScore) {
+    impl->score += increaseInScore;
+    impl->highScore = impl->score > impl->highScore ? impl->score : impl->highScore;
+}
 void Engine::levelUp() {
     if (impl->level + 1 <= Engine::MAX_LEVEL) {
         ++impl->level;

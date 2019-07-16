@@ -48,7 +48,7 @@ public:
     bool attemptRotateCCW();
     bool dropToBottom();
 
-    void checkForFilledRow();
+    int checkForFilledRow(const int);
     
     friend ostream& operator<<(ostream&, const Board& b);
 

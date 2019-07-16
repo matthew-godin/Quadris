@@ -47,6 +47,7 @@ class Engine: public Observer, public Subject {
     void levelUp();
     void levelDown();
     void restart();
+    void updateScore(int);
     
     public:
         Engine(shared_ptr<Board>, int, string);

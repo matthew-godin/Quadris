@@ -1,6 +1,7 @@
 #include "../include/Board.h"
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 using std::vector;
 typedef pair<int, int> int_pair;
@@ -242,8 +243,10 @@ bool Board::dropToBottom() {
     return true;
 }
 
-void Board::checkForFilledRow() {
+// Returns: The points scored from this
+int Board::checkForFilledRow(const int currentLevel) {
     int lastEmptyRow = board.size();
+    int pointsScored = 0;
     // parse throw board
     for (int back = board.size() - 1; back > 3; --back) {
         bool isFull = true;
@@ -253,10 +256,13 @@ void Board::checkForFilledRow() {
         }
         if (isFull) {
             emptyFilledRow(back);
+            pointsScored += pow((currentLevel + 1), 2);
             lastEmptyRow = back;
             moveBlocksDown(lastEmptyRow);
         }
     }
+
+    return pointsScored;
 }
 
 ostream& operator<<(ostream& out, const Board& b) {
