@@ -20,8 +20,31 @@ Board::~Board() {
 
 // Private Methods
 
-void Board::emptyFilledRow(int rowIndex) {
+void Board::emptyFilledRow(int rowToEmpty) {
     // Private method that empties out a particular row
+    for (auto &c: board.at(rowToEmpty)) {
+        c = BlockType::EMPTY;
+    }
+}
+
+void Board::moveBlocksDown(int lastEmptyRow) {
+    // avoid moving these coordinates down
+    auto currentBlockCoordinates = currentBlock->getTiles();
+    if (lastEmptyRow < 1 || lastEmptyRow >= Board::MAX_BOARD_ROWS) return;
+
+    int numRowsToMoveDown = board.size() - lastEmptyRow;
+    std::cout << "Moving row " << lastEmptyRow - 1 << " down by " << numRowsToMoveDown << (numRowsToMoveDown == 1 ? " row" : " rows") << std::endl;
+    for (int i = lastEmptyRow - 1; i >= 0; --i) {
+        for (int j = 0; j < Board::MAX_BOARD_COLUMNS; ++j) {
+            if (board.at(i).at(j) == BlockType::EMPTY) continue;
+            pair<int, int> modifiedBlockCoordinates = pair<int, int>(i, j);
+            auto it = find(currentBlockCoordinates.begin(), currentBlockCoordinates.end(), modifiedBlockCoordinates);
+            // Don't move block down if it is the one being controlled by the user
+            if (it == currentBlockCoordinates.end()) continue;
+            board.at(i + numRowsToMoveDown).at(j) = board.at(i).at(j);
+            board.at(i).at(j) = BlockType::EMPTY;
+        }
+    }
 }
 
 // Requires: rowIndex & columnIndex are within bounds of the board
@@ -29,6 +52,27 @@ bool Board::isBoardEmptyAt(std::pair<int, int> coordinate) {
     int rowIndex = coordinate.first;
     int columnIndex = coordinate.second;
     return board.at(rowIndex).at(columnIndex) == BlockType::EMPTY;
+}
+
+void Board::checkForFilledRow() {
+    int lastEmptyRow = board.size();
+    // parse throw board
+    for (int back = board.size() - 1; back > 3; --back) {
+        bool isFull = true;
+        for (auto column: board.at(back)) {
+            isFull = isFull && (column != BlockType::EMPTY);
+            if (!isFull) break;
+        }
+        if (isFull) {
+            std::cout << "Row " << back << " is full." << std::endl;
+            emptyFilledRow(back);
+            lastEmptyRow = back;
+        } else {
+            break;
+        }
+    }
+
+    moveBlocksDown(lastEmptyRow);
 }
 
 // Overridden Observer Methods
@@ -91,6 +135,7 @@ bool Board::attemptInsertBlockIntoBoard(shared_ptr<Block> b) {
     }
     return true;
 }
+
 bool Board::attemptMoveLeft() {
     if (currentBlock == nullptr) return false;
     auto positions = currentBlock->getTiles();
@@ -150,7 +195,7 @@ bool Board::moveDown() {
             return false;
         }
     }
-
+    checkForFilledRow();
     return true;
 }
 
@@ -172,11 +217,8 @@ bool Board::dropToBottom() {
         bool wasMoveDownSuccessful = moveDown();
         if (!wasMoveDownSuccessful) break;
     }
+    checkForFilledRow();
     return true;
-}
-
-void Board::checkForFilledRow() {
-    // parse throw board
 }
 
 ostream& operator<<(ostream& out, const Board& b) {
