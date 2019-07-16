@@ -24,6 +24,7 @@ class Board: public Observer {
     void emptyFilledRow(int);
     void moveBlocksDown(int);
     bool isBoardEmptyAt(pair<int, int>);
+    bool canMoveDownAgain();
 public:
     Board();
     
@@ -54,7 +55,6 @@ public:
     BlockType getTypeAt(int i, int j);
     int getBoardLength();
     int getBoardHeight();
-    BlockType getNextBlock();
 };
 
 #endif

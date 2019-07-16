@@ -37,7 +37,8 @@ void Engine::performCommand(string command, int numRepititions) {
         for (int i = 0; i < numRepititions; ++i) {
             bool blockCanMoveDownAgain = impl->board->moveDown();
             if (!blockCanMoveDownAgain) {
-                bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->blockFactory.getNextBlock());
+                bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->nextBlock);
+                impl->nextBlock = impl->blockFactory.getNextBlock();
                 impl->board->checkForFilledRow();
                 if (!wasInsertSuccessful) {
                     impl->isGameOver = true;
@@ -51,7 +52,8 @@ void Engine::performCommand(string command, int numRepititions) {
     } else if (command == "drop") {
         for (int i = 0; i < numRepititions; ++i) {
             impl->board->dropToBottom();
-            bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->blockFactory.getNextBlock());
+            bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->nextBlock);
+            impl->nextBlock = impl->blockFactory.getNextBlock();
             impl->board->checkForFilledRow();
             if (!wasInsertSuccessful) {
                 impl->isGameOver = true;
@@ -114,6 +116,7 @@ void Engine::run() {
     SDL_Event e;
     // Insert the first block in the board
     impl->board->attemptInsertBlockIntoBoard(impl->blockFactory.getNextBlock());
+    impl->nextBlock = impl->blockFactory.getNextBlock();
     notifyObservers();
     while (true) {
         bool wasGameClosed = false;
@@ -181,7 +184,7 @@ int Engine::getBoardHeight() {
 }
 
 BlockType Engine::getNextBlock() {
-    return impl->board->getNextBlock();
+    return impl->nextBlock->getBlockType();
 }
 
 bool Engine::getGameOver() {

@@ -34,6 +34,7 @@ class Engine: public Observer, public Subject {
         // Main Board
         shared_ptr<Board> board;
         shared_ptr<Block> currentBlock;
+        shared_ptr<Block> nextBlock;
         queue<shared_ptr<Block>> queuedBlocks;
 
         EngineImpl(shared_ptr<Board>, int, string);

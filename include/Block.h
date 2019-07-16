@@ -25,11 +25,12 @@ class Block: public Subject {
     
     // Order of tile positions doesn't matter
     vector<pair<int, int>> tilePositions;
+    int minX, minY, maxX, maxY;
     // Previous tile positions
     vector<pair<int, int>> previousTilePositions;
 
     
-    static vector<pair<int,int>> getInitialTilePositionForType(BlockType);
+    static vector<pair<int,int>> getInitialTilePositionForType(BlockType, int&, int&, int&, int&);
 public:
     Block(BlockType type);
     
@@ -46,6 +47,11 @@ public:
     vector<pair<int, int>> getTiles();
     vector<pair<int, int>> getPreviousTiles();
     BlockType getBlockType();
+
+    int getMinX();
+    int getMinY();
+    int getMaxX();
+    int getMaxY();
 };
 
 #endif
