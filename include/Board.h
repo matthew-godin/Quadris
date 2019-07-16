@@ -23,7 +23,6 @@ class Board: public Observer {
 
     void emptyFilledRow(int);
     void moveBlocksDown(int);
-    void checkForFilledRow();
     bool isBoardEmptyAt(pair<int, int>);
 public:
     Board();
@@ -48,6 +47,8 @@ public:
     bool attemptRotateCCW();
     bool dropToBottom();
 
+    void checkForFilledRow();
+    
     friend ostream& operator<<(ostream&, const Board& b);
 
     BlockType getTypeAt(int i, int j);

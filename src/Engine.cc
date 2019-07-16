@@ -38,6 +38,7 @@ void Engine::performCommand(string command, int numRepititions) {
             bool blockCanMoveDownAgain = impl->board->moveDown();
             if (!blockCanMoveDownAgain) {
                 bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->blockFactory.getNextBlock());
+                impl->board->checkForFilledRow();
                 if (!wasInsertSuccessful) {
                     impl->isGameOver = true;
                 }
@@ -51,6 +52,7 @@ void Engine::performCommand(string command, int numRepititions) {
         for (int i = 0; i < numRepititions; ++i) {
             impl->board->dropToBottom();
             bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->blockFactory.getNextBlock());
+            impl->board->checkForFilledRow();
             if (!wasInsertSuccessful) {
                 impl->isGameOver = true;
             }

@@ -30,20 +30,28 @@ void Board::emptyFilledRow(int rowToEmpty) {
 void Board::moveBlocksDown(int lastEmptyRow) {
     // avoid moving these coordinates down
     auto currentBlockCoordinates = currentBlock->getTiles();
-    if (lastEmptyRow < 1 || lastEmptyRow >= Board::MAX_BOARD_ROWS) return;
+    if (lastEmptyRow < 4 || lastEmptyRow >= Board::MAX_BOARD_ROWS) return;
 
     int numRowsToMoveDown = board.size() - lastEmptyRow;
     std::cout << "Moving row " << lastEmptyRow - 1 << " down by " << numRowsToMoveDown << (numRowsToMoveDown == 1 ? " row" : " rows") << std::endl;
-    for (int i = lastEmptyRow - 1; i >= 0; --i) {
+    for (int i = lastEmptyRow - 1; i >= 3; --i) {
+        bool isAnEntireLineEmpty = true;
         for (int j = 0; j < Board::MAX_BOARD_COLUMNS; ++j) {
             if (board.at(i).at(j) == BlockType::EMPTY) continue;
+
+            isAnEntireLineEmpty = false;
+            // Check if the part of board we're moving down belongs to current block
             pair<int, int> modifiedBlockCoordinates = pair<int, int>(i, j);
             auto it = find(currentBlockCoordinates.begin(), currentBlockCoordinates.end(), modifiedBlockCoordinates);
+            
             // Don't move block down if it is the one being controlled by the user
-            if (it == currentBlockCoordinates.end()) continue;
+            if (it != currentBlockCoordinates.end()) continue;
+            // otherwise move it down
             board.at(i + numRowsToMoveDown).at(j) = board.at(i).at(j);
             board.at(i).at(j) = BlockType::EMPTY;
         }
+
+        if (isAnEntireLineEmpty) break;
     }
 }
 
@@ -195,7 +203,6 @@ bool Board::moveDown() {
             return false;
         }
     }
-    checkForFilledRow();
     return true;
 }
 
@@ -217,7 +224,6 @@ bool Board::dropToBottom() {
         bool wasMoveDownSuccessful = moveDown();
         if (!wasMoveDownSuccessful) break;
     }
-    checkForFilledRow();
     return true;
 }
 
