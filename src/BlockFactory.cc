@@ -55,6 +55,9 @@ shared_ptr<Block> BlockFactory::getNextBlock() {
     return make_shared<Block>(blockType, level);
 }
 
+shared_ptr<Block> BlockFactory::getBlockOfType(BlockType type) {
+    return make_shared<Block>(type, level);
+}
 void BlockFactory::incrementLevel() {
     level++;
 }

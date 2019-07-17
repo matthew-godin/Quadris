@@ -25,6 +25,11 @@ void Board::emptyFilledRow(int rowToEmpty) {
     // Private method that empties out a particular row
     for (auto &c: board.at(rowToEmpty)) {
         c = BlockType::EMPTY;
+        // notify all blocks that this place has been emptied
+        // and then update the block letting it know that these
+        // parts of the block have been removed
+        // When all parts of block have been removed,
+        // notify board and it will update the score.
     }
 }
 

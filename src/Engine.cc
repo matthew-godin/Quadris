@@ -80,8 +80,8 @@ void Engine::performCommand(string command, int numRepititions) {
 
         // cast string command to I, J, and other block types
         // Assuming that the string is of length 1 
-        // BlockType b = static_cast<BlockType>(command.front());
-        
+        BlockType blockType = static_cast<BlockType>(command.front());
+        auto newBlock = impl->blockFactory.getBlockOfType(blockType);
         // Replace current block with block of this type
     }
 }

@@ -1,5 +1,5 @@
 CXX = g++ # This is the main compiler
-CXXFLAGS = -std=c++14 -Wall -w -lSDL2 -lSDL2_ttf
+CXXFLAGS = -std=c++14 -g -Wall -w -lSDL2 -lSDL2_ttf
 
 SRCDIR = src
 BUILDDIR = build
@@ -24,5 +24,5 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 clean:
 	@echo " Cleaning...";
 	$(RM) -r $(BUILDDIR) $(TARGET)
-	
-.PHONY: clean
+
+.PHONY: clean, test

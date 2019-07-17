@@ -18,6 +18,7 @@ class BlockFactory {
     public:
         BlockFactory(int, string);
         shared_ptr<Block> getNextBlock();
+        shared_ptr<Block> getBlockOfType(BlockType);
         void incrementLevel();
         void decrementLevel();
 };
