@@ -84,6 +84,11 @@ vector<int_pair> Block::getInitialTilePositionForType(BlockType type, int &minX,
                 int_pair(3, 2),
                 int_pair(4, 1)
             };
+        case BlockType::STAR:
+            minX = minY = maxX = maxY = 0;
+            return vector<int_pair>{
+                int_pair(3, 5)
+            };
             // TODO: throw error if something
         default:
             type = BlockType::EMPTY;

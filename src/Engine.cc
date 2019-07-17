@@ -17,6 +17,7 @@ Engine::EngineImpl::EngineImpl(shared_ptr<Board> b, int level, string inputFile)
     highScore{0},
     isGettingRandomBlocks{false},
     isGameOver{false},
+    numBlocksDropped{0},
     blockFactory{BlockFactory(level, inputFile)},
     commandTrie{nullptr},
     board{b},
@@ -26,33 +27,72 @@ Engine::EngineImpl::~EngineImpl() {
     commandTrie.release();
 }
 
+void Engine::performDown() {
+    bool blockCanMoveDownAgain = impl->board->moveDown();
+    if (!blockCanMoveDownAgain) {
+        ++impl->numBlocksDropped;
+        if (impl->level == 4 && impl->numBlocksDropped % 5 == 0) {
+            BlockType starType = static_cast<BlockType>('*');
+            shared_ptr<Block> starBlock = make_shared<Block>(starType, impl->level);
+            bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(starBlock);
+            if (!wasInsertSuccessful) {
+                impl->isGameOver = true;
+            }
+            impl->board->dropToBottom();
+        }
+        bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->nextBlock);
+        impl->nextBlock = impl->blockFactory.getNextBlock();
+        int increaseInScore = impl->board->checkForFilledRow(impl->level);
+        updateScore(increaseInScore);
+        if (!wasInsertSuccessful) {
+            impl->isGameOver = true;
+        }
+    }
+}
+
 // Private methods
 // requires: command is always valid, numRepititions is the number of times to perform the command
 void Engine::performCommand(string command, int numRepititions) {
     if (command == "left") {
         for (int i = 0; i < numRepititions; ++i) impl->board->attemptMoveLeft();
+        if (impl->level == 3) {
+            performDown();
+        }
     } else if (command == "right") {
         for (int i = 0; i < numRepititions; ++i) impl->board->attemptMoveRight();
+        if (impl->level == 3) {
+            performDown();
+        }
     } else if (command == "down") {
         for (int i = 0; i < numRepititions; ++i) {
-            bool blockCanMoveDownAgain = impl->board->moveDown();
-            if (!blockCanMoveDownAgain) {
-                bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->nextBlock);
-                impl->nextBlock = impl->blockFactory.getNextBlock();
-                int increaseInScore = impl->board->checkForFilledRow(impl->level);
-                updateScore(increaseInScore);
-                if (!wasInsertSuccessful) {
-                    impl->isGameOver = true;
-                }
-            }
+            performDown();
+        }
+        if (impl->level == 3) {
+            performDown();
         }
     } else if (command == "clockwise") {
         for (int i = 0; i < numRepititions; ++i) impl->board->attemptRotateCW();
+        if (impl->level == 3) {
+            performDown();
+        }
     } else if (command == "counterclockwise") {
         for (int i = 0; i < numRepititions; ++i) impl->board->attemptRotateCCW();
+        if (impl->level == 3) {
+            performDown();
+        }
     } else if (command == "drop") {
         for (int i = 0; i < numRepititions; ++i) {
             impl->board->dropToBottom();
+            ++impl->numBlocksDropped;
+            if (impl->level == 4 && impl->numBlocksDropped % 5 == 0) {
+                BlockType starType = static_cast<BlockType>('*');
+                shared_ptr<Block> starBlock = make_shared<Block>(starType, impl->level);
+                bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(starBlock);
+                if (!wasInsertSuccessful) {
+                    impl->isGameOver = true;
+                }
+                impl->board->dropToBottom();
+            }
             bool wasInsertSuccessful = impl->board->attemptInsertBlockIntoBoard(impl->nextBlock);
             impl->nextBlock = impl->blockFactory.getNextBlock();
             int increaseInScore = impl->board->checkForFilledRow(impl->level);

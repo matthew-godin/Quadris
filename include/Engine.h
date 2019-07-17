@@ -29,6 +29,7 @@ class Engine: public Observer, public Subject {
         int highScore;
         bool isGettingRandomBlocks;
         bool isGameOver;
+        int numBlocksDropped;
         BlockFactory blockFactory;
         unique_ptr<CommandTrie> commandTrie;
         // Main Board
@@ -48,7 +49,7 @@ class Engine: public Observer, public Subject {
     void levelDown();
     void restart();
     void updateScore(int);
-    
+    void performDown();
     public:
         Engine(shared_ptr<Board>, int, string);
         ~Engine();

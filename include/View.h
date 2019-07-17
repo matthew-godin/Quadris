@@ -25,6 +25,7 @@ class View : public Observer {
     SDL_Surface *S_Block;
     SDL_Surface *Z_Block;
     SDL_Surface *T_Block;
+    SDL_Surface *Star_Block;
     SDL_Surface *frame;
     TTF_Font *arcadeFont;
     SDL_Rect position;

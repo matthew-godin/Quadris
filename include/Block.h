@@ -14,6 +14,7 @@ enum BlockType: char {
     S = 'S',
     Z = 'Z',
     T = 'T',
+    STAR = '*',
     EMPTY = ' '
 };
 

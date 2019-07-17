@@ -14,6 +14,7 @@ O_Block{nullptr},
 S_Block{nullptr},
 Z_Block{nullptr},
 T_Block{nullptr},
+Star_Block{nullptr},
 arcadeFont{nullptr},
 window{nullptr},
 quit{false} {
@@ -30,6 +31,7 @@ quit{false} {
             !loadMedia(&S_Block, "img/S.bmp") || 
             !loadMedia(&Z_Block, "img/Z.bmp") ||
             !loadMedia(&T_Block, "img/T.bmp") ||
+            !loadMedia(&Star_Block, "img/star.bmp") ||
             !loadFont(&arcadeFont, "fonts/arcade.ttf", 80) ||
             !loadMedia(&frame, "img/frame.bmp");
         
@@ -83,6 +85,7 @@ View::~View() {
     freeSurface(&S_Block);
     freeSurface(&Z_Block);
     freeSurface(&T_Block);
+    freeSurface(&Star_Block);
     freeSurface(&frame);
     close(&window);
     //subject->detach(this);
@@ -249,6 +252,10 @@ void View::notify(Engine *engine) {
                 case BlockType::T:
                     outStream << "T";
                     SDL_BlitSurface(T_Block, &partialTop, screenSurface, &position);
+                    break;
+                case BlockType::STAR:
+                    outStream << "*";
+                    SDL_BlitSurface(Star_Block, &partialTop, screenSurface, &position);
                     break;
                 case BlockType::EMPTY:
                     outStream << " ";
