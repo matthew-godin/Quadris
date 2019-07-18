@@ -183,7 +183,8 @@ void Engine::run() {
         }
 
         // Otherwise take input from user
-        cin >> input;
+        //cin >> input;
+        getline(cin, input);
 
         int i;
         for (i = 0; i < input.size(); i++) {
